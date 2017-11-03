@@ -1,5 +1,9 @@
-﻿using SpotifyAPI.Local;
+﻿using CoreTweet;
+using SpotifyAPI.Local;
 using System.Windows;
+using Twitify.Objects;
+using Twitify.Resources;
+using Twitify.Utilities;
 
 namespace Twitify.Windows
 {
@@ -8,6 +12,10 @@ namespace Twitify.Windows
     /// </summary>
     public partial class MainWindow
     {
+        private const string CredentialsPath = "credentials.json";
+
+        private Credentials _credentials;
+        private Tokens _tokens;
         private SpotifyLocalAPI _spotify;
 
         public MainWindow()
@@ -17,24 +25,53 @@ namespace Twitify.Windows
 
         private void Initialize(object sender, RoutedEventArgs e)
         {
+            _credentials = Credentials.Open(CredentialsPath);
+
+            if (_credentials.AccessToken.IsNullOrEmpty() ||
+                _credentials.AccessTokenSecret.IsNullOrEmpty())
+            {
+                var authWindow = new AuthWindow();
+                authWindow.ShowDialog();
+
+                var result = authWindow.Result;
+                _credentials.AccessToken = result.AccessToken;
+                _credentials.AccessTokenSecret = result.AccessTokenSecret;
+                _credentials.Save();
+            }
+
+            _tokens = Tokens.Create(
+                TwitterKeys.ConsumerKey,
+                TwitterKeys.ConsumerSecret,
+                _credentials.AccessToken,
+                _credentials.AccessTokenSecret
+            );
+
             _spotify = new SpotifyLocalAPI
             {
                 ListenForEvents = true
             };
 
-            _spotify.OnTrackChange += OnPlayingTrackChanged;
+            _spotify.OnTrackChange += OnPlayingTrackChangedAsync;
             _spotify.Connect();
         }
 
-        private void OnPlayingTrackChanged(object sender, TrackChangeEventArgs e)
+        private async void OnPlayingTrackChangedAsync(object sender, TrackChangeEventArgs e)
         {
             var track = e.NewTrack;
+            if (track == null) return;
+
+            var title = track.TrackResource.Name;
+            var artist = track.ArtistResource.Name;
+            var album = track.AlbumResource.Name;
+
             Dispatcher.Invoke(() =>
             {
-                Title.Content = track.TrackResource.Name;
-                Artist.Content = track.ArtistResource.Name;
-                Album.Content = track.AlbumResource.Name;
+                Title.Content = title;
+                Artist.Content = artist;
+                Album.Content = album;
             });
+
+            await _tokens.Statuses.UpdateAsync($"NowPlaying: {title} - {artist} ({album})");
         }
     }
 }
