@@ -8,11 +8,11 @@ using System.Windows;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("Twitify")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("Tweet your playing music on Spotify")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("Siketyan")]
 [assembly: AssemblyProduct("Twitify")]
-[assembly: AssemblyCopyright("Copyright ©  2017")]
+[assembly: AssemblyCopyright("Copyright © 2017 Siketyan.")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
