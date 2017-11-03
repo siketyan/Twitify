@@ -1,6 +1,9 @@
 ﻿using CoreTweet;
 using SpotifyAPI.Local;
+using System;
+using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Media.Animation;
 using Twitify.Objects;
 using Twitify.Resources;
 using Twitify.Utilities;
@@ -14,6 +17,7 @@ namespace Twitify.Windows
     {
         private const string CredentialsPath = "credentials.json";
 
+        private readonly TimeSpan _animationDuration = TimeSpan.FromMilliseconds(500);
         private Credentials _credentials;
         private Tokens _tokens;
         private SpotifyLocalAPI _spotify;
@@ -57,6 +61,12 @@ namespace Twitify.Windows
 
         private async void OnPlayingTrackChangedAsync(object sender, TrackChangeEventArgs e)
         {
+            Dispatcher.Invoke(() =>
+            {
+                ShowWindow();
+                ChangeStatus(false);
+            });
+
             var track = e.NewTrack;
             if (track == null) return;
 
@@ -72,6 +82,47 @@ namespace Twitify.Windows
             });
 
             await _tokens.Statuses.UpdateAsync($"NowPlaying: {title} - {artist} ({album})");
+            Dispatcher.Invoke(() =>
+            {
+                ChangeStatus(true);
+                HideWindowAsync(3000);
+            });
+        }
+
+        private void ChangeStatus(bool isSuccess)
+        {
+            var showAnimation = new DoubleAnimation(1, _animationDuration);
+            var hideAnimation = new DoubleAnimation(0, _animationDuration);
+            
+            if (isSuccess)
+            {
+                StatusBusy.BeginAnimation(OpacityProperty, hideAnimation);
+                StatusSuccess.BeginAnimation(OpacityProperty, showAnimation);
+            }
+            else
+            {
+                StatusBusy.BeginAnimation(OpacityProperty, showAnimation);
+                StatusSuccess.BeginAnimation(OpacityProperty, hideAnimation);
+            }
+        }
+
+        private void ShowWindow()
+        {
+            ChangeWindowOpacity(1);
+        }
+
+        private async void HideWindowAsync(int delay = 0)
+        {
+            if (delay != 0) await Task.Delay(delay);
+            ChangeWindowOpacity(0);
+        }
+
+        private void ChangeWindowOpacity(double opacity)
+        {
+            BeginAnimation(
+                OpacityProperty,
+                new DoubleAnimation(opacity, _animationDuration)
+            );
         }
     }
 }
