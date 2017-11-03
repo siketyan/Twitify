@@ -3,9 +3,40 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:loaders="clr-namespace:Loaders;assembly=MrMitch.Loaders"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
-    <Grid>
+        Title="Twitify" Height="107" Width="430" Topmost="True" ShowInTaskbar="False"
+        WindowStyle="None" AllowsTransparency="True" Background="{x:Null}">
+    <Border Margin="15" Background="#282828" CornerRadius="5">
+        <Border.OpacityMask>
+            <VisualBrush>
+                <VisualBrush.Visual>
+                    <Border Background="Black" SnapsToDevicePixels="True"
+                            CornerRadius="{Binding CornerRadius, RelativeSource={RelativeSource AncestorType=Border}}"
+                            Width="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=Border}}"
+                            Height="{Binding ActualHeight, RelativeSource={RelativeSource AncestorType=Border}}" />
+                </VisualBrush.Visual>
+            </VisualBrush>
+        </Border.OpacityMask>
+        <Border.Effect>
+            <DropShadowEffect Color="#B2ACAAAA" ShadowDepth="0" BlurRadius="15" Direction="0" />
+        </Border.Effect>
 
-    </Grid>
+        <DockPanel>
+            <Image x:Name="Thumbnail" DockPanel.Dock="Left" Width="80" />
+            <Grid DockPanel.Dock="Right">
+                <loaders:ChromeLoader x:Name="StatusBusy" Margin="20" Foreground="#1db954" />
+                <Label x:Name="StatusSuccess" Foreground="#1db954"
+                       FontSize="28" Visibility="Hidden"
+                       VerticalContentAlignment="Center"
+                       HorizontalContentAlignment="Center"
+                       FontFamily="Resources/#Material Icons"></Label>
+            </Grid>
+            <StackPanel Margin="10">
+                <Label x:Name="Title"  Foreground="#FFF" FontSize="14" Padding="1,0" />
+                <Label x:Name="Artist" Foreground="#DDD" Padding="1" />
+                <Label x:Name="Album"  Foreground="#DDD" Padding="1" />
+            </StackPanel>
+        </DockPanel>
+    </Border>
 </Window>
