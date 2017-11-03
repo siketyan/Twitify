@@ -1,4 +1,4 @@
-﻿namespace Twitify
+﻿namespace Twitify.Windows
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
