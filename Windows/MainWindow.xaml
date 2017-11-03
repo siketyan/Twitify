@@ -6,7 +6,8 @@
         xmlns:loaders="clr-namespace:Loaders;assembly=MrMitch.Loaders"
         mc:Ignorable="d"
         Title="Twitify" Height="107" Width="430" Topmost="True" ShowInTaskbar="False"
-        WindowStyle="None" AllowsTransparency="True" Background="{x:Null}">
+        WindowStyle="None" AllowsTransparency="True" Background="{x:Null}"
+        Loaded="Initialize">
     <Border Margin="15" Background="#282828" CornerRadius="5">
         <Border.OpacityMask>
             <VisualBrush>
