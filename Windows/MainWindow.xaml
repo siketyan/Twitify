@@ -28,10 +28,10 @@
             <Grid DockPanel.Dock="Right">
                 <loaders:ChromeLoader x:Name="StatusBusy" Margin="20" Foreground="#1db954" />
                 <Label x:Name="StatusSuccess" Foreground="#1db954"
-                       FontSize="28" Visibility="Hidden"
+                       FontSize="28" Opacity="0"
                        VerticalContentAlignment="Center"
                        HorizontalContentAlignment="Center"
-                       FontFamily="Resources/#Material Icons"></Label>
+                       FontFamily="../Resources/#Material Icons"></Label>
             </Grid>
             <StackPanel Margin="10">
                 <Label x:Name="Title"  Foreground="#FFF" FontSize="14" Padding="1,0" />
